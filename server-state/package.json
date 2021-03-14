@@ -1,0 +1,14 @@
+{
+  "name": "instance-state",
+  "version": "1.0.0",
+  "description": "Instance state service for valhalla",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-ec2": "^3.7.0",
+    "got": "^11.8.2"
+  }
+}
