@@ -2,30 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: A serverless application to toggle instance state
 Resources:
-  EventApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: prod
-      DefinitionBody:
-        swagger: '2.0'
-        info:
-          title: Valhalla state
-          version: 1.0.0
-        paths:
-          /valhalla/state/{state}:
-            post:
-              responses:
-                '202':
-                  description: Accepted the request and will not return content
-              x-amazon-apigateway-integration:
-                type: AWS
-                requestParameters:
-                  integration.request.header.X-Amz-Invocation-Type: '''Event'''
-                httpMethod: post
-                uri: "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:916874177440:function:valhalla-server-state/invocations"
-                responses:
-                  default:
-                    statusCode: 202
   Function:
     Type: AWS::Serverless::Function
     Properties:
@@ -41,4 +17,3 @@ Resources:
           Properties:
             Path: /valhalla/state/{state}
             Method: post
-            RestApiId: !Ref EventApi

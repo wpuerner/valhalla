@@ -8,7 +8,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-ec2": "^3.7.0",
-    "got": "^11.8.2"
+    "@aws-sdk/client-ec2": "^3.7.0"
   }
 }
