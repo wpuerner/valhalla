@@ -1,4 +1,10 @@
-<p>
-  server-status works!
-</p>
-<p *ngIf="!isServerStatus">The server is not available!</p>
+<div *ngIf="isServerAvailable">
+  <h1>Server is up!</h1>
+  <p>Server IP: {{serverIp}}</p>
+  <p>Current Players: {{numPlayers}}</p>
+  <p>Server Name: {{serverName}}</p>
+  <p>Map Name: {{mapName}}</p>
+</div>
+<div *ngIf="!isServerAvailable">
+  <h1>Server is down!</h1>
+</div>
