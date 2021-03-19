@@ -11,7 +11,7 @@ const Gamedig = require("gamedig");
 
 const params = {
     InstanceIds: [
-        "i-043822a6585ffc35b"
+        "i-008b88e0c451f0725"
     ]
 }
 
@@ -70,7 +70,8 @@ var formatError = function(error) {
     return {
         "statusCode": 500,
         "headers": {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
         },
         "body": error.message
     }

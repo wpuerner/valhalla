@@ -10,7 +10,7 @@ const ec2client = new EC2Client({ region: REGION });
 
 const params = {
     InstanceIds: [
-        "i-043822a6585ffc35b"
+        "i-008b88e0c451f0725"
     ]
 }
 
@@ -31,7 +31,10 @@ exports.handler = async function(event, context) {
     }
 
     let response = {
-        statusCode: 204
+        "statusCode": 204,
+        "headers": {
+            "Access-Control-Allow-Origin": "*"
+        }
     };
 
     return response;
