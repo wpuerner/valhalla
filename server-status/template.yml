@@ -20,5 +20,5 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /valhalla/state
+            Path: /valhalla/servers/{serverId}/state
             Method: get
