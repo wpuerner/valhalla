@@ -15,5 +15,5 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /valhalla/state/{state}
+            Path: /valhalla/servers/{serverId}/state/{state}
             Method: post
