@@ -1,0 +1,23 @@
+{
+  "name": "valhalla",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wpuerner/valhalla.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wpuerner/valhalla/issues"
+  },
+  "homepage": "https://github.com/wpuerner/valhalla#readme",
+  "dependencies":{
+    "@aws-sdk/client-ec2": "^3.7.0",
+    "gamedig": "^3.0.0"
+  }
+}
