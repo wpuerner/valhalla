@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "valhalla-server-state"
+stack_name = "valhalla-api"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1txx6yh6gk8ly"
-s3_prefix = "valhalla-server-state"
+s3_prefix = "valhalla-api"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
