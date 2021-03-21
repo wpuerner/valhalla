@@ -9,19 +9,28 @@ const ec2client = new EC2Client({ region: REGION });
 
 const Gamedig = require("gamedig");
 
-const params = {
-    InstanceIds: [
-        "i-008b88e0c451f0725"
-    ]
-}
+const servers = new Map([
+    ["1", "i-008b88e0c451f0725"],
+    ["2", "i-043822a6585ffc35b"]
+]);
 
 exports.handler = async function(event, context) {
 
-    console.log("Starting request. Getting server status...");
+    const serverId = event.pathParameters.serverId;
+
+    if(!servers.has(serverId)) return formatError(new Error("The supplied Server ID is not valid"), 400);
 
     let response = {};
 
     try {
+        const params = {
+            InstanceIds: [
+                servers.get(event.pathParameters.serverId)
+            ]
+        }
+
+        console.log("Starting request. Getting server status for instance" + params.InstanceIds[0]);
+
         const data = await ec2client.send(new DescribeInstancesCommand(params));
         const isInstanceRunning = data.Reservations[0].Instances[0].State.Name == "running";
 
@@ -69,6 +78,17 @@ var formatResponse = function(response) {
 var formatError = function(error) {
     return {
         "statusCode": 500,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+        },
+        "body": error.message
+    }
+}
+
+var formatError = function(error, statusCode) {
+    return {
+        "statusCode": statusCode,
         "headers": {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"

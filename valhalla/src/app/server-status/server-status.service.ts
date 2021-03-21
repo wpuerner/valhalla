@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment }  from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerStatusService {
-  private statusUrl: string = 'https://6ds7reiz2e.execute-api.us-east-2.amazonaws.com/Prod/valhalla/state';
+  
+  statusUrlPostfix: string = "/state"
 
   constructor(private http: HttpClient) { }
 
-  public getServerStatus() {
-    return this.http.get(this.statusUrl);
+  public getServerStatus(serverId: string) {
+    return this.http.get(environment.apiUrl + "/valhalla/servers/" + serverId + "/state");
   }
 }
