@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { from, Observable } from 'rxjs';
 import { ServerStatus } from './server-status';
 import { ServerStatusService } from './server-status.service';
 
@@ -9,20 +10,22 @@ import { ServerStatusService } from './server-status.service';
   providers: [ ServerStatusService ]
 })
 export class ServerStatusComponent implements OnInit {
-  private isServerAvailable: boolean = false;
+  @Input() serverId: string;
+  
+  isServerAvailable: boolean = false;
 
-  private serverIp: string = '';
+  serverIp: string = '';
 
-  private numPlayers: number = 0;
+  numPlayers: number = 0;
 
-  private serverName: string = '';
+  serverName: string = '';
 
-  private mapName: string = '';
+  mapName: string = '';
 
   constructor(private serverStatusService: ServerStatusService) { }
 
   ngOnInit() {
-    this.serverStatusService.getServerStatus().subscribe((data: ServerStatus) => {
+    this.serverStatusService.getServerStatus(this.serverId).subscribe((data: ServerStatus) => {
       this.isServerAvailable = data.isServerAvailable;
       if (this.isServerAvailable) {
         this.serverIp = data.serverIp;

@@ -1,11 +1,11 @@
 <div *ngIf="isServerAvailable">
-  <h1>Server is up!</h1>
+  <h1>Server {{serverId}} is up!</h1>
   <p>Server IP: {{serverIp}}</p>
   <p>Current Players: {{numPlayers}}</p>
   <p>Server Name: {{serverName}}</p>
   <p>Map Name: {{mapName}}</p>
 </div>
 <div *ngIf="!isServerAvailable">
-  <h1>Server is down!</h1>
+  <h1>Server {{serverId}} is down!</h1>
 </div>
 <app-state-button [isServerAvailable]="isServerAvailable"></app-state-button>

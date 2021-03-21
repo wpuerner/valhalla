@@ -5,11 +5,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ServerStatusService {
-  private statusUrl: string = 'https://6ds7reiz2e.execute-api.us-east-2.amazonaws.com/Prod/valhalla/state';
+  statusUrlPrefix: string = 'http://localhost:3000/valhalla/servers/';
+
+  statusUrlPostfix: string = "/state"
 
   constructor(private http: HttpClient) { }
 
-  public getServerStatus() {
-    return this.http.get(this.statusUrl);
+  public getServerStatus(serverId: string) {
+    return this.http.get(this.statusUrlPrefix + serverId + this.statusUrlPostfix);
   }
 }
