@@ -10,17 +10,19 @@ import { StateService } from './state.service';
 export class StateButtonComponent implements OnInit {
   @Input() isServerAvailable: boolean;
 
+  @Input() serverId: string;
+
   constructor(private stateService: StateService) { }
 
   ngOnInit() {
   }
 
   startServer() {
-    this.stateService.startServer().subscribe();
+    this.stateService.startServer(this.serverId).subscribe();
   }
 
   stopServer() {
-    this.stateService.stopServer().subscribe();
+    this.stateService.stopServer(this.serverId).subscribe();
   }
 
 }

@@ -8,4 +8,4 @@
 <div *ngIf="!isServerAvailable">
   <h1>Server {{serverId}} is down!</h1>
 </div>
-<app-state-button [isServerAvailable]="isServerAvailable"></app-state-button>
+<app-state-button [isServerAvailable]="isServerAvailable" [serverId]="serverId"></app-state-button>
