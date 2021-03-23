@@ -1,11 +1,16 @@
-<div *ngIf="isServerAvailable">
-  <h1>Server {{serverId}} is up!</h1>
-  <p>Server IP: {{serverIp}}</p>
-  <p>Current Players: {{numPlayers}}</p>
-  <p>Server Name: {{serverName}}</p>
-  <p>Map Name: {{mapName}}</p>
+<div *ngIf="loading">
+  <app-spinner></app-spinner>
 </div>
-<div *ngIf="!isServerAvailable">
-  <h1>Server {{serverId}} is down!</h1>
-</div>
-<app-state-button [isServerAvailable]="isServerAvailable" [serverId]="serverId"></app-state-button>
+<div *ngIf="!loading">
+  <div *ngIf="isServerAvailable">
+    <h1>Server {{serverId}} is up!</h1>
+    <p>Server IP: {{serverIp}}</p>
+    <p>Current Players: {{numPlayers}}</p>
+    <p>Server Name: {{serverName}}</p>
+    <p>Map Name: {{mapName}}</p>
+  </div>
+  <div *ngIf="!isServerAvailable">
+    <h1>Server {{serverId}} is down!</h1>
+  </div>
+  <app-state-button [isServerAvailable]="isServerAvailable" [serverId]="serverId"></app-state-button>
+  </div>
