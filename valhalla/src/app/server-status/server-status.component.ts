@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { from, Observable } from 'rxjs';
 import { ServerStatus } from './server-status';
 import { ServerStatusService } from './server-status.service';
 
@@ -11,16 +10,18 @@ import { ServerStatusService } from './server-status.service';
 })
 export class ServerStatusComponent implements OnInit {
   @Input() serverId: string;
-  
-  isServerAvailable: boolean = false;
 
-  serverIp: string = '';
+  loading = true;
 
-  numPlayers: number = 0;
+  isServerAvailable = false;
 
-  serverName: string = '';
+  serverIp: string;
 
-  mapName: string = '';
+  numPlayers: number;
+
+  serverName: string;
+
+  mapName: string;
 
   constructor(private serverStatusService: ServerStatusService) { }
 
@@ -33,7 +34,7 @@ export class ServerStatusComponent implements OnInit {
         this.serverName = data.name;
         this.mapName = data.map;
       }
+      this.loading = false;
     });
   }
-
 }
