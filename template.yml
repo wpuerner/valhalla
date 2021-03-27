@@ -14,7 +14,7 @@ Resources:
       Handler: server-state/index.handler
       Runtime: nodejs12.x
       Description: Instance state function
-      Timeout: 180
+      Timeout: 10
       Role: arn:aws:iam::916874177440:role/valhalla-lambda
       FunctionName: valhalla-server-state
       Events: 
@@ -33,6 +33,22 @@ Resources:
       Timeout: 10
       Role: arn:aws:iam::916874177440:role/valhalla-lambda
       FunctionName: valhalla-server-status
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /valhalla/servers/{serverId}/state
+            Method: get
+            RestApiId: !Ref ManagementApi
+  ServerDetailsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: server-details/index.handler
+      Runtime: nodejs12.x
+      Description: Server details function
+      Timeout: 10
+      Role: arn:aws:iam::916874177440:role/valhalla-lambda
+      FunctionName: valhalla-server-details
       VpcConfig:
         SecurityGroupIds:
           - sg-08806ce8e56dea70b
@@ -42,6 +58,6 @@ Resources:
         Api:
           Type: Api
           Properties:
-            Path: /valhalla/servers/{serverId}/state
+            Path: /valhalla/servers/server-ip/{serverIp}/details
             Method: get
             RestApiId: !Ref ManagementApi

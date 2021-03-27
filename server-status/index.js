@@ -7,12 +7,12 @@ const REGION = "us-east-2";
 
 const ec2client = new EC2Client({ region: REGION });
 
-const Gamedig = require("gamedig");
-
 const servers = new Map([
     ["1", "i-008b88e0c451f0725"],
     ["2", "i-043822a6585ffc35b"]
 ]);
+
+const fetch = require("node-fetch");
 
 exports.handler = async function(event, context) {
 
@@ -38,20 +38,15 @@ exports.handler = async function(event, context) {
             const instanceIp = data.Reservations[0].Instances[0].PrivateIpAddress;
             console.log("Instance is running at " + instanceIp + ", querying game server...");
 
-            await Gamedig.query({
-                type: 'protocol-valve',
-                host: instanceIp,
-                port: 2457
-            }).then((state) => {
-                response.name = state.name;
-                response.map = state.map;
-                response.serverIp = data.Reservations[0].Instances[0].PublicIpAddress + ":2456";
-                response.numPlayers = state.raw.numplayers;
-                response.isServerAvailable = true;
-            }).catch((error) => {
-                console.log("Encountered an error requesting status from the server: " + error.message);
-                response.isServerAvailable = false;
-            })
+            await fetch("https://ek2ta6hpv0.execute-api.us-east-2.amazonaws.com/Stage/valhalla/servers/server-ip/" + instanceIp + "/details")
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json);
+                    response = json;
+                });
+            
+            response.serverIp = data.Reservations[0].Instances[0].PublicIpAddress + ":2456";
+            response.isServerAvailable = true;
 
         } else {
             response.isServerAvailable = false;
