@@ -1,4 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable, of, Subject } from 'rxjs';
+import { map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { ServerStatus } from './server-status';
 import { ServerStatusService } from './server-status.service';
 
@@ -8,33 +11,34 @@ import { ServerStatusService } from './server-status.service';
   styleUrls: ['./server-status.component.css'],
   providers: [ ServerStatusService ]
 })
-export class ServerStatusComponent implements OnInit {
-  @Input() serverId: string;
+export class ServerStatusComponent {
+  serverStatus$: Observable<ServerStatus>;
 
-  loading = true;
+  serverId$: Observable<string>;
 
-  isServerAvailable = false;
+  form: FormGroup;
 
-  serverIp: string;
+  servers = [
+    {
+      name: 'MikeJohnstonsHouse',
+      serverId: '1'
+    }, {
+      name: 'Test Server',
+      serverId: '2'
+    }
+  ];
 
-  numPlayers: number;
-
-  serverName: string;
-
-  mapName: string;
-
-  constructor(private serverStatusService: ServerStatusService) { }
-
-  ngOnInit() {
-    this.serverStatusService.getServerStatus(this.serverId).subscribe((data: ServerStatus) => {
-      this.isServerAvailable = data.isServerAvailable;
-      if (this.isServerAvailable) {
-        this.serverIp = data.serverIp;
-        this.numPlayers = data.numPlayers;
-        this.serverName = data.name;
-        this.mapName = data.map;
-      }
-      this.loading = false;
+  constructor(private serverStatusService: ServerStatusService, private formBuilder: FormBuilder) {
+    this.form = this.formBuilder.group({
+      selected: ''
     });
+    this.form.controls.selected.setValue('1', {onlySelf: true});
+
+    this.serverId$ = this.form.controls.selected.valueChanges.pipe(startWith(this.form.controls.selected.value));
+
+    this.serverStatus$ = this.serverId$.pipe(
+      switchMap((serverId) => this.serverStatusService.getServerStatus(serverId)),
+      map((data) => data as ServerStatus)
+    );
   }
 }
