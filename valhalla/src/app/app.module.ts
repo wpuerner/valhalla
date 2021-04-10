@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { ServerStatusComponent } from './server-status/server-status.component';
 import { HttpClientModule } from '@angular/common/http';
 import { StateButtonComponent } from './state-button/state-button.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { StateButtonComponent } from './state-button/state-button.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
