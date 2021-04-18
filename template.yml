@@ -61,3 +61,17 @@ Resources:
             Path: /valhalla/servers/server-ip/{serverIp}/details
             Method: get
             RestApiId: !Ref ManagementApi
+  ShutdownMonitorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shutdown-monitor/index.handler
+      Runtime: nodejs12.x
+      Description: Shutdown monitor function
+      Timeout: 60
+      Role: arn:aws:iam::916874177440:role/valhalla-lambda
+      FunctionName: valhalla-shutdown-monitor
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 * * * ? *)
