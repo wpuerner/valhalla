@@ -7,7 +7,9 @@
 <div *ngIf="serverStatus$ | async as serverStatus; else loading">
   <div *ngIf="serverStatus.isServerAvailable">
     <h1>Server is up!</h1>
-    <p>Server IP: {{serverStatus.serverIp}}</p>
+    <div class="row">
+      <div>Server IP: {{serverStatus.serverIp}}</div><img src="assets/images/copy.svg" [cdkCopyToClipboard]="serverStatus.serverIp" id="copy"/>
+    </div>
     <p>Current Players: {{serverStatus.numPlayers}}</p>
     <p>Server Name: {{serverStatus.name}}</p>
     <p>Map Name: {{serverStatus.map}}</p>
