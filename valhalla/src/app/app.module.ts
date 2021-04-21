@@ -6,6 +6,7 @@ import { ServerStatusComponent } from './server-status/server-status.component';
 import { HttpClientModule } from '@angular/common/http';
 import { StateButtonComponent } from './state-button/state-button.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
