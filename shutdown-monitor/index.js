@@ -14,7 +14,7 @@ exports.handler = async function(event, context) {
         
         console.log(`Got status for server ${serverId}: ${JSON.stringify(serverStatus)}`);
 
-        if (serverStatus.isServerAvailable && serverStatus.numPlayers == 0) {
+        if (serverStatus.isServerAvailable && (serverStatus.numPlayers === undefined || 0)) {
             console.log(`Server ${serverId} is running with no players, shutting down server...`);
             await fetch(serverStateUrl.replace("{serverId}", serverId).replace("{state}", "stop"), { method: "POST" })
                 .then((res) => {
