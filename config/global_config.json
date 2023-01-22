@@ -1,0 +1,22 @@
+{
+  "gameServers": [
+    {
+      "id": 1,
+      "name": "vhserver",
+      "instanceId": "i-043822a6585ffc35b",
+      "user": "vhuser",
+      "playPort": "2456",
+      "queryPort": "2457",
+      "gamedigType": "protocol-valve"
+    },
+    {
+      "id": 2,
+      "name": "vhserver",
+      "instanceId": "i-008b88e0c451f0725",
+      "user": "vhuser",
+      "playPort": "2456",
+      "queryPort": "2457",
+      "gamedigType": "protocol-valve"
+    }
+  ]
+}

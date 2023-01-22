@@ -1,0 +1,16 @@
+[Unit]
+Description=Valhalla server powered by LinuxGSM
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User=ubuntu
+WorkingDirectory=/home/vhuser
+RemainAfterExit=yes
+ExecStart=/home/ubuntu/valhalla start
+ExecStop=/home/ubuntu/valhalla stop
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

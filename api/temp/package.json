@@ -1,0 +1,14 @@
+{
+  "name": "temp",
+  "version": "1.0.0",
+  "description": "temp directory for testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gamedig": "^4.0.6"
+  }
+}
