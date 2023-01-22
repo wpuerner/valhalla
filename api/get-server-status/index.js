@@ -1,13 +1,5 @@
-const {
-  GetObjectCommand,
-  S3Client,
-  ServerSideEncryptionByDefaultFilterSensitiveLog,
-} = require("@aws-sdk/client-s3");
-const {
-  DescribeInstancesCommand,
-  EC2Client,
-  GetConsoleOutputCommand,
-} = require("@aws-sdk/client-ec2");
+const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+const { DescribeInstancesCommand, EC2Client } = require("@aws-sdk/client-ec2");
 
 const Gamedig = require("gamedig");
 
@@ -21,20 +13,24 @@ exports.handler = async function (event, context) {
   ];
   const instanceDetails = await getInstanceDetails(instanceIds);
 
-  // for ec2 instances that are running, get statuses and details of game servers
-  const response = {};
-  for (const server of serverConfiguration.gameServers) {
-    response[server.id] = await getServerDetails(
-      server,
-      instanceDetails.get(server.instanceId)
-    );
-  }
-  console.log(response);
+  const result = await Promise.all(
+    serverConfiguration.gameServers.map((server) => {
+      return getServerDetails(server, instanceDetails.get(server.instanceId));
+    })
+  );
+
+  console.log(result);
 };
 
 async function getServerDetails(server, instance) {
+  const baseServerInfo = {
+    instanceId: instance.id,
+    serverId: server.id,
+  };
+
   if (instance.state !== "running") {
     return {
+      ...baseServerInfo,
       instanceState: instance.state,
       serverState: "stopped",
     };
@@ -48,6 +44,7 @@ async function getServerDetails(server, instance) {
     });
 
     return {
+      ...baseServerInfo,
       instanceState: "running",
       serverState: "running",
       connect: response.connect,
@@ -56,6 +53,7 @@ async function getServerDetails(server, instance) {
     };
   } catch (error) {
     return {
+      ...baseServerInfo,
       instanceState: "running",
       serverState: "stopped",
     };
@@ -90,6 +88,7 @@ async function getInstanceDetails(instanceIds) {
     response.Reservations.forEach((reservation) => {
       const instance = reservation.Instances[0];
       instanceStates.set(instance.InstanceId, {
+        id: instance.InstanceId,
         state: instance.State.Name,
         privateIpAddress: instance.PrivateIpAddress,
         publicIpAddress: instance.PublicIpAddress,

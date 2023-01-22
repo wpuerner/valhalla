@@ -1,0 +1,48 @@
+/* * {
+  outline: 1px red solid;
+} */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.App {
+  font-family: "Trebuchet MS";
+}
+
+.container {
+  margin: auto;
+  margin-top: 24px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instance {
+  border: 1px lightgray solid;
+  border-radius: 6px;
+}
+
+.instance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px;
+}
+
+.server {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px lightgray solid;
+  padding: 6px;
+}
+
+svg {
+  display: block;
+}
