@@ -18,7 +18,7 @@ h5 {
 .container {
   margin: auto;
   margin-top: 24px;
-  max-width: 400px;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -36,11 +36,20 @@ h5 {
   padding: 6px;
 }
 
-.server {
-  display: flex;
-  justify-content: space-between;
+.server {  
   border-top: 1px lightgray solid;
   padding: 6px;
+}
+
+.server-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.server-actions {
+  
+
 }
 
 svg {

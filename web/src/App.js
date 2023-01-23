@@ -75,13 +75,16 @@ class Instance extends React.Component {
 function Server(props) {
   return (
     <div className="server">
-      <div>
-        <h4>{props.server.name}</h4>
+      <div className="server-header">
+        <h3>{props.server.name}</h3>
+        <h3>{props.server.state}</h3>
+      </div>
+      <div className="server-details">
         <div>{props.server.id}</div>
         <div>{props.server.connect}</div>
       </div>
-      <div>
-        <div>{props.server.state}</div>
+      <div className="server-actions">
+        <button>Start/Stop</button>
       </div>
     </div>
   );
