@@ -28,12 +28,14 @@ export default function startMockServer() {
             serverId: "server id 1",
           },
           {
+            name: "Some Other Server",
             instanceId: "i-008b88e0c451f0725",
             instanceState: "running",
             serverState: "stopped",
             serverId: "server id 1",
           },
           {
+            name: "A Different Server",
             instanceId: "i-043822a6585ffc35b",
             instanceState: "stopped",
             serverState: "stopped",

@@ -54,7 +54,7 @@ class Instance extends React.Component {
     return (
       <div className="instance">
         <div className="instance-header">
-          <h3>{this.state.instance.id}</h3>
+          <div>{this.state.instance.id}</div>
           <div>{this.state.instance.state}</div>
           <div onClick={this.changeDrawerState}>
             {this.state.isDrawerOpen ? <BsChevronDown /> : <BsChevronUp />}
@@ -77,7 +77,9 @@ function Server(props) {
     <div className="server">
       <div className="server-header">
         <h3>{props.server.name}</h3>
-        <h3>{props.server.state}</h3>
+        <div className={`server-state ${props.server.state}`}>
+          {props.server.state.toUpperCase()}
+        </div>
       </div>
       <div className="server-details">
         <div>{props.server.id}</div>

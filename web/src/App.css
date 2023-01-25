@@ -36,7 +36,7 @@ h5 {
   padding: 6px;
 }
 
-.server {  
+.server {
   border-top: 1px lightgray solid;
   padding: 6px;
 }
@@ -47,9 +47,21 @@ h5 {
   align-items: center;
 }
 
-.server-actions {
-  
+.server-state {
+  color: white;
+  border-radius: 12px;
+  background-color: gray;
+  padding: 6px 12px;
+  line-height: 12px;
+}
 
+.running {
+  background-color: green;
+}
+
+.server-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 svg {
