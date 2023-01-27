@@ -1,0 +1,28 @@
+{
+  "instances": {
+    "i-043822a6585ffc35b": {
+      "startupServerId": "1",
+      "servers": {
+        "1": {
+          "user": "vhuser",
+          "name": "MikeJohnstonsHouse",
+          "playPort": "2456",
+          "queryPort": "2457",
+          "type": "valheim"
+        }
+      }
+    },
+    "i-008b88e0c451f0725": {
+      "startupServerId": "1",
+      "servers": {
+        "1": {
+          "user": "vhuser",
+          "name": "MikeJohnstonsHouse",
+          "playPort": "2456",
+          "queryPort": "2457",
+          "type": "valheim"
+        }
+      }
+    }
+  }
+}

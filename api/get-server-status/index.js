@@ -4,98 +4,90 @@ const { DescribeInstancesCommand, EC2Client } = require("@aws-sdk/client-ec2");
 const Gamedig = require("gamedig");
 
 exports.handler = async function (event, context) {
-  const serverConfiguration = await getServerConfiguration();
+  try {
+    const data = await getServerData();
 
-  const instanceIds = [
-    ...new Set(
-      serverConfiguration.gameServers.map((server) => server.instanceId)
-    ),
-  ];
-  const instanceDetails = await getInstanceDetails(instanceIds);
+    await populateInstances(data);
 
-  const result = await Promise.all(
-    serverConfiguration.gameServers.map((server) => {
-      return getServerDetails(server, instanceDetails.get(server.instanceId));
+    for (const instance of Object.values(data.instances)) {
+      await populateServers(instance);
+    }
+
+    return getHttpResponse(filterResponse(data), 200);
+  } catch (error) {
+    return getHttpResponse(
+      `There was a problem getting data from the server: ${error}`,
+      500
+    );
+  }
+};
+
+function getHttpResponse(response, httpStatus) {
+  return {
+    statusCode: httpStatus,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*", // don't ever do this in your job
+    },
+    body: JSON.stringify(response),
+  };
+}
+
+function filterResponse(data) {
+  return data;
+}
+
+async function populateServers(instance) {
+  const servers = instance.servers;
+  for (const server of Object.values(servers)) {
+    if (instance.state !== "running") {
+      server.state = "stopped";
+    }
+
+    try {
+      const response = await Gamedig.query({
+        type: server.gamedigType ? server.gamedigType : "protocol-valve",
+        host: instance.publicIpAddress,
+        port: server.queryPort,
+      });
+
+      server.state = "running";
+      server.connect = response.connect;
+      server.players = response.players;
+    } catch (error) {
+      server.state = "stopped";
+    }
+  }
+}
+
+async function getServerData() {
+  const client = new S3Client({ region: "us-east-2" });
+  const response = await client.send(
+    new GetObjectCommand({
+      Bucket: "kestrel-valhalla-resources",
+      Key: "valhalla_data.json",
+    })
+  );
+  return JSON.parse(await response.Body.transformToString());
+}
+
+async function populateInstances(data) {
+  const instanceIds = Object.keys(data.instances);
+
+  const client = new EC2Client({ region: "us-east-2" });
+  const response = await client.send(
+    new DescribeInstancesCommand({
+      instanceIds: instanceIds,
     })
   );
 
-  console.log(result);
-};
-
-async function getServerDetails(server, instance) {
-  const baseServerInfo = {
-    instanceId: instance.id,
-    serverId: server.id,
-  };
-
-  if (instance.state !== "running") {
-    return {
-      ...baseServerInfo,
-      instanceState: instance.state,
-      serverState: "stopped",
+  response.Reservations.forEach((reservation) => {
+    const instance = reservation.Instances[0];
+    data.instances[instance.InstanceId] = {
+      ...data.instances[instance.InstanceId],
+      state: instance.State.Name,
+      privateIpAddress: instance.PrivateIpAddress,
+      publicIpAddress: instance.PublicIpAddress,
     };
-  }
-
-  try {
-    const response = await Gamedig.query({
-      type: server.gamedigType,
-      host: instance.publicIpAddress,
-      port: server.queryPort,
-    });
-
-    return {
-      ...baseServerInfo,
-      instanceState: "running",
-      serverState: "running",
-      connect: response.connect,
-      name: response.name,
-      players: response.players,
-    };
-  } catch (error) {
-    return {
-      ...baseServerInfo,
-      instanceState: "running",
-      serverState: "stopped",
-    };
-  }
-}
-
-async function getServerConfiguration() {
-  const client = new S3Client({ region: "us-east-2" });
-  try {
-    const response = await client.send(
-      new GetObjectCommand({
-        Bucket: "kestrel-valhalla-resources",
-        Key: "global_config.json",
-      })
-    );
-    return JSON.parse(await response.Body.transformToString());
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function getInstanceDetails(instanceIds) {
-  const client = new EC2Client({ region: "us-east-2" });
-  try {
-    const response = await client.send(
-      new DescribeInstancesCommand({
-        instanceIds: instanceIds,
-      })
-    );
-
-    const instanceStates = new Map();
-    response.Reservations.forEach((reservation) => {
-      const instance = reservation.Instances[0];
-      instanceStates.set(instance.InstanceId, {
-        id: instance.InstanceId,
-        state: instance.State.Name,
-        privateIpAddress: instance.PrivateIpAddress,
-        publicIpAddress: instance.PublicIpAddress,
-      });
-    });
-    return instanceStates;
-  } catch (error) {
-    console.error(error);
-  }
+  });
 }
