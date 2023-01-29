@@ -3,7 +3,11 @@ const {
   EC2Client,
   StartInstancesCommand,
 } = require("@aws-sdk/client-ec2");
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 
 exports.handler = async function (event, context) {
   try {
@@ -71,7 +75,6 @@ async function startServer(request) {
   }
 
   instance.startupServerId = request.serverId;
-  console.log(data);
   await s3client.send(
     new PutObjectCommand({
       Bucket: "kestrel-valhalla-resources",
@@ -82,7 +85,7 @@ async function startServer(request) {
 
   const ec2client = new EC2Client({ region: "us-east-2" });
   await ec2client.send(
-    new StartInstancesCommand({ InstanceIds: Array.from(request.instanceId) })
+    new StartInstancesCommand({ InstanceIds: [request.instanceId] })
   );
 }
 
@@ -103,7 +106,7 @@ async function stopServer(request) {
   const ec2client = new EC2Client({ region: "us-east-2" });
   await ec2client.send(
     new StopInstancesCommand({
-      InstanceIds: Array.from(request.instanceId),
+      InstanceIds: [request.instanceId],
     })
   );
 }

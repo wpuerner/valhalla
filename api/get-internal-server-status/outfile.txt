@@ -1,0 +1,1 @@
+"{\"privateIpAddress\":\"10.0.0.115\",\"servers\":{\"1\":{\"queryPort\":\"2457\",\"state\":\"stopped\"},\"3\":{\"queryPort\":\"2459\",\"state\":\"running\",\"connect\":\"10.0.0.115:2458\",\"players\":[]}}}"

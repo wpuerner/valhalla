@@ -1,6 +1,6 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
-Description: A serverless application to toggle instance state
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: A function based game server manager
 Resources:
   ManagementApi:
     Type: AWS::Serverless::Api
@@ -8,70 +8,57 @@ Resources:
       StageName: prod
       Cors:
         AllowOrigin: "'*'"
-  ServerStateFunction:
+  ChangeServerStateFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: server-state/index.handler
-      Runtime: nodejs12.x
-      Description: Instance state function
+      CodeUri: ./api/change-server-state
+      Handler: ./api/change-server-state/index.handler
+      Runtime: nodejs18.x
+      Description: Start and stop Valhalla servers
       Timeout: 10
       Role: arn:aws:iam::916874177440:role/valhalla-lambda
-      FunctionName: valhalla-server-state
-      Events: 
-        Api:
-          Type: Api
-          Properties:
-            Path: /valhalla/servers/{serverId}/state/{state}
-            Method: post
-            RestApiId: !Ref ManagementApi
-  ServerStatusFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: server-status/index.handler
-      Runtime: nodejs12.x
-      Description: Server status function
-      Timeout: 10
-      Role: arn:aws:iam::916874177440:role/valhalla-lambda
-      FunctionName: valhalla-server-status
+      FunctionName: valhalla-change-server-state
       Events:
         Api:
           Type: Api
           Properties:
-            Path: /valhalla/servers/{serverId}/state
-            Method: get
+            Path: /valhalla/state
+            Method: post
             RestApiId: !Ref ManagementApi
-  ServerDetailsFunction:
+  GetServerStatusFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: server-details/index.handler
-      Runtime: nodejs12.x
-      Description: Server details function
+      CodeUri: ./api/get-server-status
+      Handler: ./api/get-server-status/index.handler
+      Runtime: nodejs18.x
+      Description: Get state and details of Valhalla instances and servers
       Timeout: 10
       Role: arn:aws:iam::916874177440:role/valhalla-lambda
-      FunctionName: valhalla-server-details
+      FunctionName: valhalla-get-server-status
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /valhalla/status
+            Method: get
+            RestApiId: !Ref ManagementApi
+      # VpcConfig:
+      #   SecurityGroupIds:
+      #     - sg-08806ce8e56dea70b
+      #   SubnetIds:
+      #     - subnet-0708e65042f6fecfd
+  GetInternalServerStatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./api/get-internal-server-status
+      Handler: ./api-get-internal-server-status/index.handler
+      Runtime: nodejs18.x
+      Description: Get details of Valhalla servers internal to the instances
+      Timeout: 10
+      Role: arn:aws:iam::916874177440:role/valhalla-lambda
+      FunctionName: valhalla-get-internal-server-status
       VpcConfig:
         SecurityGroupIds:
           - sg-08806ce8e56dea70b
         SubnetIds:
           - subnet-060715bd6c442feec
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /valhalla/servers/server-ip/{serverIp}/details
-            Method: get
-            RestApiId: !Ref ManagementApi
-  ShutdownMonitorFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: shutdown-monitor/index.handler
-      Runtime: nodejs12.x
-      Description: Shutdown monitor function
-      Timeout: 60
-      Role: arn:aws:iam::916874177440:role/valhalla-lambda
-      FunctionName: valhalla-shutdown-monitor
-      Events:
-        Schedule:
-          Type: Schedule
-          Properties:
-            Schedule: cron(0 * * * ? *)

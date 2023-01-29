@@ -1,5 +1,6 @@
 const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { DescribeInstancesCommand, EC2Client } = require("@aws-sdk/client-ec2");
+const { InvokeCommand, LambdaClient } = require("@aws-sdk/client-lambda");
 
 const Gamedig = require("gamedig");
 
@@ -38,26 +39,28 @@ function filterResponse(data) {
 }
 
 async function populateServers(instance) {
-  const servers = instance.servers;
-  for (const server of Object.values(servers)) {
-    if (instance.state !== "running") {
+  if (instance.state !== "running") {
+    instance.servers.map((server) => {
       server.state = "stopped";
-    }
-
-    try {
-      const response = await Gamedig.query({
-        type: server.gamedigType ? server.gamedigType : "protocol-valve",
-        host: instance.publicIpAddress,
-        port: server.queryPort,
-      });
-
-      server.state = "running";
-      server.connect = response.connect;
-      server.players = response.players;
-    } catch (error) {
-      server.state = "stopped";
-    }
+    });
+    return;
   }
+
+  const client = new LambdaClient({});
+  const response = await client
+    .send(
+      new InvokeCommand({
+        FunctionName: "valhalla-get-internal-server-status",
+        Payload: JSON.stringify(instance),
+      })
+    )
+    .then((res) => {
+      return JSON.parse(Buffer.from(res.Payload).toString("utf-8"));
+    });
+
+  console.log(response.servers);
+
+  instance.servers = response.servers;
 }
 
 async function getServerData() {
@@ -77,7 +80,7 @@ async function populateInstances(data) {
   const client = new EC2Client({ region: "us-east-2" });
   const response = await client.send(
     new DescribeInstancesCommand({
-      instanceIds: instanceIds,
+      InstanceIds: instanceIds,
     })
   );
 

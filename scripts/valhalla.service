@@ -5,11 +5,11 @@ Wants=network-online.target
 
 [Service]
 Type=forking
-User=ubuntu
-WorkingDirectory=/home/vhuser
+User=valhalla
+WorkingDirectory=/home/valhalla
 RemainAfterExit=yes
-ExecStart=/home/ubuntu/valhalla start
-ExecStop=/home/ubuntu/valhalla stop
+ExecStart=/home/valhalla/.nvm/versions/node/v18.13.0/bin/node -e 'import("/home/valhalla/manager.js").then(loadedModule => loadedModule.startServer()).catch(error => console.error(error))'
+ExecStop=/home/valhalla/.nvm/versions/node/v18.13.0/bin/node -e 'import("/home/valhalla/manager.js").then(loadedModule => loadedModule.stopServer())'
 Restart=no
 
 [Install]
