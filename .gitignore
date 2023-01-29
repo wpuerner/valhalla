@@ -190,3 +190,5 @@ tools/gulp-tasks/cldr/cldr-data/
 
 ref/
 *.pem
+
+temp
