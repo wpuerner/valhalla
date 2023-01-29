@@ -3,46 +3,61 @@ import { createServer } from "miragejs";
 export default function startMockServer() {
   createServer({
     routes() {
-      this.get("/api/reminders", () => ({
-        text: "Hello server!",
+      this.get("/api/server-state", () => ({
+        instances: {
+          "i-008b88e0c451f0725": {
+            startupServerId: "3",
+            servers: {
+              1: {
+                name: "MikeJohnstonsHouse",
+                playPort: "2456",
+                queryPort: "2457",
+                type: "valheim",
+                state: "stopped",
+              },
+              3: {
+                name: "SomeOtherServer",
+                playPort: "2458",
+                queryPort: "2459",
+                type: "valheim",
+                state: "running",
+                connect: "10.0.0.115:2458",
+                players: [],
+              },
+            },
+            state: "running",
+            privateIpAddress: "10.0.0.115",
+            publicIpAddress: "3.145.105.122",
+          },
+          "i-008b88e0c7893yw78": {
+            startupServerId: "3",
+            servers: {
+              1: {
+                name: "TestServerThree",
+                playPort: "2456",
+                queryPort: "2457",
+                type: "valheim",
+                state: "stopped",
+              },
+              3: {
+                name: "TestServerFour",
+                playPort: "2458",
+                queryPort: "2459",
+                type: "valheim",
+                state: "stopped",
+              },
+            },
+            state: "stopped",
+            privateIpAddress: "10.0.0.115",
+            publicIpAddress: "3.145.105.122",
+          },
+        },
       }));
 
-      this.get("/api/server-state", () => ({
-        servers: [
-          {
-            instanceId: "i-008b88e0c451f0725",
-            instanceState: "running",
-            serverState: "running",
-            connect: "18.191.195.145:2456",
-            name: "Valheim Server",
-            players: [],
-            serverId: "server id 1",
-          },
-          {
-            instanceId: "i-008b88e0c451f0725",
-            instanceState: "running",
-            serverState: "running",
-            connect: "18.191.195.145:2456",
-            name: "Valheim Server",
-            players: [],
-            serverId: "server id 1",
-          },
-          {
-            name: "Some Other Server",
-            instanceId: "i-008b88e0c451f0725",
-            instanceState: "running",
-            serverState: "stopped",
-            serverId: "server id 1",
-          },
-          {
-            name: "A Different Server",
-            instanceId: "i-043822a6585ffc35b",
-            instanceState: "stopped",
-            serverState: "stopped",
-            serverId: "server id 2",
-          },
-        ],
-      }));
+      this.post("/valhalla/state", (schema, request) => {
+        const attrs = JSON.parse(request.requestBody);
+        console.log(attrs);
+      });
     },
   });
 }

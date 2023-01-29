@@ -40,7 +40,7 @@ function filterResponse(data) {
 
 async function populateServers(instance) {
   if (instance.state !== "running") {
-    instance.servers.map((server) => {
+    Object.values(instance.servers).map((server) => {
       server.state = "stopped";
     });
     return;

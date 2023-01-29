@@ -8,6 +8,7 @@ Resources:
       StageName: prod
       Cors:
         AllowOrigin: "'*'"
+        AllowHeaders: "'*'"
   ChangeServerStateFunction:
     Type: AWS::Serverless::Function
     Properties:
