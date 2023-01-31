@@ -2,8 +2,6 @@ const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { DescribeInstancesCommand, EC2Client } = require("@aws-sdk/client-ec2");
 const { InvokeCommand, LambdaClient } = require("@aws-sdk/client-lambda");
 
-const Gamedig = require("gamedig");
-
 exports.handler = async function (event, context) {
   try {
     const data = await getServerData();

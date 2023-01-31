@@ -3,16 +3,10 @@
     "i-008b88e0c451f0725": {
       "startupServerId": "3",
       "servers": {
-        "1": {
-          "name": "MikeJohnstonsHouse",
+        "3": {
+          "name": "This is the actual real server now",
           "playPort": "2456",
           "queryPort": "2457",
-          "type": "valheim"
-        },
-        "3": {
-          "name": "SomeOtherServer",
-          "playPort": "2458",
-          "queryPort": "2459",
           "type": "valheim"
         }
       }

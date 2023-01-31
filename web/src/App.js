@@ -68,8 +68,7 @@ function Instance(props) {
               </div>
             </div>
             <div className="server-details">
-              <div>{serverId}</div>
-              <div>{server.connect}</div>
+              <div>{`${props.instance.publicIpAddress}:${server.playPort}`}</div>
             </div>
             {props.instance.state !== "running" && (
               <button onClick={() => startServer(props.instanceId, serverId)}>
