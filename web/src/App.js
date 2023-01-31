@@ -10,6 +10,7 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       instances: [],
     };
   }
@@ -20,6 +21,7 @@ export class App extends React.Component {
       .then((result) => {
         this.setState({
           instances: result.instances,
+          loading: false,
         });
       });
   }
@@ -30,6 +32,8 @@ export class App extends React.Component {
     return (
       <div className="App">
         <div className="container">
+          <Header />
+          {this.state.loading && <Spinner />}
           {Object.keys(this.state.instances).map((instanceId) => {
             return (
               <Instance
@@ -44,6 +48,21 @@ export class App extends React.Component {
   }
 }
 
+function Spinner(props) {
+  return <div className="spinner"></div>;
+}
+
+function Header(props) {
+  return (
+    <div className="header">
+      <img
+        src="https://see.fontimg.com/api/renderfont4/LJnn/eyJyIjoiZnMiLCJoIjo2NSwidyI6MTAwMCwiZnMiOjY1LCJmZ2MiOiIjMDAwMDAwIiwiYmdjIjoiI0ZGRkZGRiIsInQiOjF9/VmFsaGFsbGE/odins-spear.png"
+        alt="Viking fonts"
+      />
+    </div>
+  );
+}
+
 function Instance(props) {
   console.log(props);
 
@@ -53,7 +72,12 @@ function Instance(props) {
         <div>{props.instanceId}</div>
         <div>{props.instance.state}</div>
         {props.instance.state === "running" && (
-          <button onClick={() => stopInstance(props.instanceId)}>Stop</button>
+          <button
+            className="state-button"
+            onClick={() => stopInstance(props.instanceId)}
+          >
+            Stop
+          </button>
         )}
       </div>
       {Object.keys(props.instance.servers).map((serverId) => {
@@ -71,7 +95,10 @@ function Instance(props) {
               <div>{`${props.instance.publicIpAddress}:${server.playPort}`}</div>
             </div>
             {props.instance.state !== "running" && (
-              <button onClick={() => startServer(props.instanceId, serverId)}>
+              <button
+                className="state-button"
+                onClick={() => startServer(props.instanceId, serverId)}
+              >
                 Start
               </button>
             )}
@@ -83,6 +110,9 @@ function Instance(props) {
 }
 
 function stopInstance(instanceId) {
+  window.alert(
+    `Stopping instance ${instanceId}. Please wait a few seconds and refresh the page.`
+  );
   fetch(`${API_HOST}/valhalla/state`, {
     method: "POST",
     headers: {
@@ -96,6 +126,9 @@ function stopInstance(instanceId) {
 }
 
 function startServer(instanceId, serverId) {
+  window.alert(
+    `Starting server ${serverId}. Please wait a few seconds and refresh the page.`
+  );
   fetch(`${API_HOST}/valhalla/state`, {
     method: "POST",
     body: JSON.stringify({
