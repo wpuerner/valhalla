@@ -1,0 +1,16 @@
+[Unit]
+Description=Valhalla server powered by LinuxGSM
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User=valhalla
+WorkingDirectory=/home/valhalla
+RemainAfterExit=yes
+ExecStart=/home/valhalla/.nvm/versions/node/v18.13.0/bin/node -e 'import("/home/valhalla/manager.js").then(loadedModule => loadedModule.startServer()).catch(error => console.error(error))'
+ExecStop=/home/valhalla/.nvm/versions/node/v18.13.0/bin/node -e 'import("/home/valhalla/manager.js").then(loadedModule => loadedModule.stopServer())'
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

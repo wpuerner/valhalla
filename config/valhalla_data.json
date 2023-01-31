@@ -1,0 +1,15 @@
+{
+  "instances": {
+    "i-008b88e0c451f0725": {
+      "startupServerId": "3",
+      "servers": {
+        "3": {
+          "name": "This is the actual real server now",
+          "playPort": "2456",
+          "queryPort": "2457",
+          "type": "valheim"
+        }
+      }
+    }
+  }
+}
