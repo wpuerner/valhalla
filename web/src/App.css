@@ -63,36 +63,51 @@ body {
 .instance {
   border: 2px #ffffff1a solid;
   border-radius: 6px;
+  padding: 8px;
 }
 
 .instance-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px;
+  margin-bottom: 8px;
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .server {
-  border-top: 2px #ffffff1a solid;
+  border: 2px #ffffff1a solid;
+  border-radius: 4px;
   padding: 6px;
 }
 
 .server-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+}
+
+.server-header > h3 {
+  padding-left: 16px;
 }
 
 .server-state {
-  color: #d9ce83;
+  height: 24px;
+  aspect-ratio: 1;
+  border-radius: 50%;
   border: 2px #ffffff1a solid;
-  border-radius: 12px;
-  padding: 6px 12px;
-  line-height: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.server-details {
+  padding-top: 8px;
 }
 
 .running {
-  background-color: #656d5b;
+  color: rgb(78, 128, 49);
 }
 
 .server-actions {
@@ -109,9 +124,5 @@ body {
   padding-bottom: 6px;
   width: 150px;
   cursor: pointer;
-}
-
-.state-button:active {
-  background-color: red;
-  content: "ok";
+  margin-left: auto;
 }

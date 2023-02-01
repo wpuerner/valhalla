@@ -1,5 +1,7 @@
 import "./App.css";
 import React from "react";
+import { FaRunning } from "react-icons/fa";
+import { AiOutlineStop } from "react-icons/ai";
 
 const API_HOST =
   process.env.NODE_ENV === "development"
@@ -70,7 +72,6 @@ function Instance(props) {
     <div className="instance">
       <div className="instance-header">
         <div>{props.instanceId}</div>
-        <div>{props.instance.state}</div>
         {props.instance.state === "running" && (
           <button
             className="state-button"
@@ -80,31 +81,45 @@ function Instance(props) {
           </button>
         )}
       </div>
-      {Object.keys(props.instance.servers).map((serverId) => {
-        const server = props.instance.servers[serverId];
+      <div className="server-list">
+        {Object.keys(props.instance.servers).map((serverId) => {
+          return (
+            <Server
+              instanceId={props.instanceId}
+              instance={props.instance}
+              serverId={serverId}
+              server={props.instance.servers[serverId]}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
-        return (
-          <div className="server">
-            <div className="server-header">
-              <h3>{server.name}</h3>
-              <div className={`server-state ${server.state}`}>
-                {server.state.toUpperCase()}
-              </div>
-            </div>
-            <div className="server-details">
-              <div>{`${props.instance.publicIpAddress}:${server.playPort}`}</div>
-            </div>
-            {props.instance.state !== "running" && (
-              <button
-                className="state-button"
-                onClick={() => startServer(props.instanceId, serverId)}
-              >
-                Start
-              </button>
-            )}
-          </div>
-        );
-      })}
+function Server(props) {
+  return (
+    <div className="server">
+      <div className="server-header">
+        <div className={`server-state ${props.server.state}`}>
+          {props.server.state === "running" && <FaRunning />}
+          {props.server.state !== "running" && <AiOutlineStop />}
+        </div>
+        <h3>{props.server.name}</h3>
+        {props.instance.state !== "running" && (
+          <button
+            className="state-button"
+            onClick={() => startServer(props.instanceId, props.serverId)}
+          >
+            Start
+          </button>
+        )}
+      </div>
+      {props.server.state === "running" && (
+        <div className="server-details">
+          <div>{`${props.instance.publicIpAddress}:${props.server.playPort}`}</div>
+        </div>
+      )}
     </div>
   );
 }
