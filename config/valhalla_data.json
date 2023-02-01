@@ -4,7 +4,7 @@
       "startupServerId": "3",
       "servers": {
         "3": {
-          "name": "This is the actual real server now",
+          "name": "Subaru Forester",
           "playPort": "2456",
           "queryPort": "2457",
           "type": "valheim"
