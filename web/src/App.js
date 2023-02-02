@@ -1,5 +1,7 @@
 import "./App.css";
 import React from "react";
+import { FaRunning } from "react-icons/fa";
+import { AiOutlineStop } from "react-icons/ai";
 
 const API_HOST =
   process.env.NODE_ENV === "development"
@@ -10,6 +12,7 @@ export class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       instances: [],
     };
   }
@@ -20,6 +23,7 @@ export class App extends React.Component {
       .then((result) => {
         this.setState({
           instances: result.instances,
+          loading: false,
         });
       });
   }
@@ -30,6 +34,8 @@ export class App extends React.Component {
     return (
       <div className="App">
         <div className="container">
+          <Header />
+          {this.state.loading && <Spinner />}
           {Object.keys(this.state.instances).map((instanceId) => {
             return (
               <Instance
@@ -44,6 +50,21 @@ export class App extends React.Component {
   }
 }
 
+function Spinner(props) {
+  return <div className="spinner"></div>;
+}
+
+function Header(props) {
+  return (
+    <div className="header">
+      <img
+        src="https://see.fontimg.com/api/renderfont4/LJnn/eyJyIjoiZnMiLCJoIjo2NSwidyI6MTAwMCwiZnMiOjY1LCJmZ2MiOiIjMDAwMDAwIiwiYmdjIjoiI0ZGRkZGRiIsInQiOjF9/VmFsaGFsbGE/odins-spear.png"
+        alt="Viking fonts"
+      />
+    </div>
+  );
+}
+
 function Instance(props) {
   console.log(props);
 
@@ -51,38 +72,62 @@ function Instance(props) {
     <div className="instance">
       <div className="instance-header">
         <div>{props.instanceId}</div>
-        <div>{props.instance.state}</div>
         {props.instance.state === "running" && (
-          <button onClick={() => stopInstance(props.instanceId)}>Stop</button>
+          <button
+            className="state-button"
+            onClick={() => stopInstance(props.instanceId)}
+          >
+            Stop
+          </button>
         )}
       </div>
-      {Object.keys(props.instance.servers).map((serverId) => {
-        const server = props.instance.servers[serverId];
+      <div className="server-list">
+        {Object.keys(props.instance.servers).map((serverId) => {
+          return (
+            <Server
+              instanceId={props.instanceId}
+              instance={props.instance}
+              serverId={serverId}
+              server={props.instance.servers[serverId]}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
-        return (
-          <div className="server">
-            <div className="server-header">
-              <h3>{server.name}</h3>
-              <div className={`server-state ${server.state}`}>
-                {server.state.toUpperCase()}
-              </div>
-            </div>
-            <div className="server-details">
-              <div>{`${props.instance.publicIpAddress}:${server.playPort}`}</div>
-            </div>
-            {props.instance.state !== "running" && (
-              <button onClick={() => startServer(props.instanceId, serverId)}>
-                Start
-              </button>
-            )}
-          </div>
-        );
-      })}
+function Server(props) {
+  return (
+    <div className="server">
+      <div className="server-header">
+        <div className={`server-state ${props.server.state}`}>
+          {props.server.state === "running" && <FaRunning />}
+          {props.server.state !== "running" && <AiOutlineStop />}
+        </div>
+        <h3>{props.server.name}</h3>
+        {props.instance.state !== "running" && (
+          <button
+            className="state-button"
+            onClick={() => startServer(props.instanceId, props.serverId)}
+          >
+            Start
+          </button>
+        )}
+      </div>
+      {props.server.state === "running" && (
+        <div className="server-details">
+          <div>{`${props.instance.publicIpAddress}:${props.server.playPort}`}</div>
+        </div>
+      )}
     </div>
   );
 }
 
 function stopInstance(instanceId) {
+  window.alert(
+    `Stopping instance ${instanceId}. Please wait a few seconds and refresh the page.`
+  );
   fetch(`${API_HOST}/valhalla/state`, {
     method: "POST",
     headers: {
@@ -96,6 +141,9 @@ function stopInstance(instanceId) {
 }
 
 function startServer(instanceId, serverId) {
+  window.alert(
+    `Starting server ${serverId}. Please wait a few seconds and refresh the page.`
+  );
   fetch(`${API_HOST}/valhalla/state`, {
     method: "POST",
     body: JSON.stringify({

@@ -11,6 +11,12 @@ h5 {
   margin-bottom: auto;
 }
 
+html,
+body {
+  background-color: rgb(58, 57, 57);
+  color: #c6c6c6;
+}
+
 .App {
   font-family: "Trebuchet MS";
 }
@@ -24,39 +30,84 @@ h5 {
   gap: 12px;
 }
 
+.header {
+  margin: auto;
+}
+
+.header > img {
+  filter: invert(0.8);
+}
+
+.spinner {
+  aspect-ratio: 1;
+  width: 100px;
+  border: 5px #ffffff1a solid;
+  border-top: 5px #d9ce83 solid;
+  border-radius: 50%;
+  margin: auto;
+  margin-top: 60px;
+  animation: spin;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .instance {
-  border: 1px lightgray solid;
+  border: 2px #ffffff1a solid;
   border-radius: 6px;
+  padding: 8px;
 }
 
 .instance-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px;
+  margin-bottom: 8px;
+}
+
+.server-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .server {
-  border-top: 1px lightgray solid;
+  border: 2px #ffffff1a solid;
+  border-radius: 4px;
   padding: 6px;
 }
 
 .server-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+}
+
+.server-header > h3 {
+  padding-left: 16px;
 }
 
 .server-state {
-  color: white;
-  border-radius: 12px;
-  background-color: gray;
-  padding: 6px 12px;
-  line-height: 12px;
+  height: 24px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px #ffffff1a solid;
+  display: grid;
+  place-items: center;
+}
+
+.server-details {
+  padding-top: 8px;
 }
 
 .running {
-  background-color: green;
+  color: rgb(78, 128, 49);
 }
 
 .server-actions {
@@ -64,6 +115,14 @@ h5 {
   justify-content: flex-end;
 }
 
-svg {
-  display: block;
+.state-button {
+  color: #c6c6c6;
+  background-color: rgb(76, 76, 149);
+  border: none;
+  border-radius: 4px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  width: 150px;
+  cursor: pointer;
+  margin-left: auto;
 }
