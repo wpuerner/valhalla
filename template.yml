@@ -43,16 +43,11 @@ Resources:
             Path: /valhalla/status
             Method: get
             RestApiId: !Ref ManagementApi
-      # VpcConfig:
-      #   SecurityGroupIds:
-      #     - sg-08806ce8e56dea70b
-      #   SubnetIds:
-      #     - subnet-0708e65042f6fecfd
   GetInternalServerStatusFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./api/get-internal-server-status
-      Handler: ./api-get-internal-server-status/index.handler
+      Handler: ./api/get-internal-server-status/index.handler
       Runtime: nodejs18.x
       Description: Get details of Valhalla servers internal to the instances
       Timeout: 10
@@ -63,3 +58,20 @@ Resources:
           - sg-08806ce8e56dea70b
         SubnetIds:
           - subnet-060715bd6c442feec
+  UpdateUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./api/update-user
+      Handler: ./api/update-user/index.handler
+      Runtime: nodejs18.x
+      Description: Update user access
+      Timeout: 5
+      Role: arn:aws:iam::916874177440:role/valhalla-lambda
+      FunctionName: valhalla-update-user
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /valhalla/user
+            Method: post
+            RestApiId: !Ref ManagementApi
