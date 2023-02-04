@@ -60,6 +60,85 @@ body {
   }
 }
 
+.users {
+  border: 2px #ffffff1a solid;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.users-header {
+  margin-bottom: 4px;
+}
+
+.user {
+  border: 2px #ffffff1a solid;
+  border-radius: 4px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+.user-name {
+  grid-column: 1 / 2;
+}
+
+.user-ip-address {
+  grid-column: 2 / 3;
+}
+
+.user-delete-button {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.add-user-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+  border: 2px #ffffff1a solid;
+  border-radius: 4px;
+}
+
+.add-user-name,
+.add-user-ip-address {
+  border-radius: 4px;
+  background-color: #ffffff1a;
+  color: white;
+  height: 24px;
+}
+
+.add-user-name {
+  grid-column: 1 / 2;
+  max-width: 150px;
+}
+
+.add-user-ip-address {
+  grid-column: 2 / 3;
+  max-width: 100px;
+}
+
+.form-valid {
+  border: 2px rgba(49, 117, 49, 0.411) solid;
+}
+
+.form-invalid {
+  border: 2px rgba(211, 57, 57, 0.539) solid;
+  background-color: rgba(211, 57, 57, 0.228);
+}
+
+.add-user-button {
+  margin-left: auto;
+  background-color: rgba(135, 135, 135, 0.47);
+  color: #c6c6c6;
+  border: 2px #ffffff1a solid;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .instance {
   border: 2px #ffffff1a solid;
   border-radius: 6px;

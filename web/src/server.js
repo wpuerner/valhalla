@@ -54,11 +54,26 @@ export default function startMockServer() {
               publicIpAddress: "3.145.105.122",
             },
           },
+          users: [
+            {
+              name: "bob",
+              ipAddress: "10.0.0.1",
+            },
+            {
+              name: "alice",
+              ipAddress: "10.0.0.2",
+            },
+          ],
         }),
-        { timing: 100 }
+        { timing: 4000 }
       );
 
       this.post("/valhalla/state", (schema, request) => {
+        const attrs = JSON.parse(request.requestBody);
+        console.log(attrs);
+      });
+
+      this.post("/valhalla/user", (schema, request) => {
         const attrs = JSON.parse(request.requestBody);
         console.log(attrs);
       });

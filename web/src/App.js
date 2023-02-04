@@ -2,6 +2,7 @@ import "./App.css";
 import React from "react";
 import { FaRunning } from "react-icons/fa";
 import { AiOutlineStop } from "react-icons/ai";
+import { MdDeleteForever } from "react-icons/md";
 
 const API_HOST =
   process.env.NODE_ENV === "development"
@@ -14,6 +15,7 @@ export class App extends React.Component {
     this.state = {
       loading: true,
       instances: [],
+      users: [],
     };
   }
 
@@ -22,6 +24,7 @@ export class App extends React.Component {
       .then((res) => res.json())
       .then((result) => {
         this.setState({
+          users: result.users,
           instances: result.instances,
           loading: false,
         });
@@ -29,32 +32,160 @@ export class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.instances);
-
     return (
       <div className="App">
         <div className="container">
           <Header />
-          {this.state.loading && <Spinner />}
-          {Object.keys(this.state.instances).map((instanceId) => {
-            return (
-              <Instance
-                instanceId={instanceId}
-                instance={this.state.instances[instanceId]}
-              />
-            );
-          })}
+          {this.state.loading ? (
+            <Spinner />
+          ) : (
+            <div>
+              <Users users={this.state.users} />
+              {Object.keys(this.state.instances).map((instanceId) => {
+                return (
+                  <Instance
+                    instanceId={instanceId}
+                    instance={this.state.instances[instanceId]}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     );
   }
 }
 
-function Spinner(props) {
+function Users(props) {
+  return (
+    <div className="users">
+      <div className="users-header">
+        <h3>Users</h3>
+      </div>
+      {props.users.map((user) => {
+        return (
+          <div className="user">
+            <span className="user-name">{user.name}</span>
+            <span className="user-ip-address">{user.ipAddress}</span>
+            <MdDeleteForever
+              className="user-delete-button"
+              onClick={() => deleteUser(user)}
+            />
+          </div>
+        );
+      })}
+      <AddUserForm />
+    </div>
+  );
+}
+
+function deleteUser(user) {
+  if (!window.confirm(`Really remove user ${user.name}?`)) return;
+
+  console.log(`Deleting user ${user.name}`);
+  fetch(`${API_HOST}/valhalla/user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: user.name,
+      ipAddress: user.ipAddress,
+      action: "remove",
+    }),
+  });
+}
+
+class AddUserForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      ipAddress: "",
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
+
+    this.setState({
+      [name]: value,
+    });
+  }
+
+  async handleSubmit(event) {
+    if (
+      this.validateIpAddress() != "form-valid" ||
+      this.validateName() != "form-valid"
+    ) {
+      window.alert("Please correct inputs and try again");
+      return;
+    }
+    if (!window.confirm(`Really add user ${this.state.name}?`)) return;
+
+    await fetch(`${API_HOST}/valhalla/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: this.state.name,
+        ipAddress: this.state.ipAddress,
+        action: "add",
+      }),
+    });
+
+    window.alert(`User ${this.state.name} was successfully added.`);
+  }
+
+  validateName() {
+    return this.state.name.match("^[a-zA-Z0-9]+$")
+      ? "form-valid"
+      : "form-invalid";
+  }
+
+  validateIpAddress() {
+    return this.state.ipAddress.match("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}")
+      ? "form-valid"
+      : "form-invalid";
+  }
+
+  render() {
+    return (
+      <form className="add-user-form" onSubmit={this.handleSubmit}>
+        <input
+          className={`add-user-name ${this.validateName()}`}
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={this.state.name}
+          onChange={this.handleChange}
+        />
+        <input
+          className={`add-user-ip-address ${this.validateIpAddress()}`}
+          type="text"
+          name="ipAddress"
+          placeholder="IP Address"
+          value={this.state.ipAddress}
+          onChange={this.handleChange}
+        />
+        <input className="add-user-button" type="submit" value="Add User" />
+      </form>
+    );
+  }
+}
+
+function Spinner() {
   return <div className="spinner"></div>;
 }
 
-function Header(props) {
+function Header() {
   return (
     <div className="header">
       <img
@@ -66,8 +197,6 @@ function Header(props) {
 }
 
 function Instance(props) {
-  console.log(props);
-
   return (
     <div className="instance">
       <div className="instance-header">
