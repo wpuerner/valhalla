@@ -3,6 +3,7 @@ import React from "react";
 import { FaRunning } from "react-icons/fa";
 import { AiOutlineStop } from "react-icons/ai";
 import { MdDeleteForever } from "react-icons/md";
+import { BiDownArrow } from "react-icons/bi";
 
 const API_HOST =
   process.env.NODE_ENV === "development"
@@ -57,44 +58,74 @@ export class App extends React.Component {
   }
 }
 
-function Users(props) {
-  return (
-    <div className="users">
-      <div className="users-header">
-        <h3>Users</h3>
-      </div>
-      {props.users.map((user) => {
-        return (
-          <div className="user">
-            <span className="user-name">{user.name}</span>
-            <span className="user-ip-address">{user.ipAddress}</span>
-            <MdDeleteForever
-              className="user-delete-button"
-              onClick={() => deleteUser(user)}
+class Users extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usersListState: "",
+      users: props.users,
+    };
+
+    this.deleteUser = this.deleteUser.bind(this);
+  }
+
+  deleteUser(user) {
+    if (!window.confirm(`Really remove user ${user.name}?`)) return;
+
+    console.log(`Deleting user ${user.name}`);
+    fetch(`${API_HOST}/valhalla/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: user.name,
+        ipAddress: user.ipAddress,
+        action: "remove",
+      }),
+    });
+  }
+
+  toggleUsersList() {
+    this.setState({
+      usersListState: this.state.usersListState === "open" ? "" : "open",
+    });
+  }
+
+  render() {
+    return (
+      <div className="users">
+        <div className="users-header">
+          <h3>Users</h3>
+          <button
+            className="menu-button"
+            onClick={() => this.toggleUsersList()}
+          >
+            <BiDownArrow
+              className={`menu-icon ${
+                this.state.usersListState === "open" ? "menu-icon-open" : ""
+              }`}
             />
-          </div>
-        );
-      })}
-      <AddUserForm />
-    </div>
-  );
-}
-
-function deleteUser(user) {
-  if (!window.confirm(`Really remove user ${user.name}?`)) return;
-
-  console.log(`Deleting user ${user.name}`);
-  fetch(`${API_HOST}/valhalla/user`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: user.name,
-      ipAddress: user.ipAddress,
-      action: "remove",
-    }),
-  });
+          </button>
+        </div>
+        <div className={`users-list ${this.state.usersListState}`}>
+          {this.state.users.map((user) => {
+            return (
+              <div className="user">
+                <span className="user-name">{user.name}</span>
+                <span className="user-ip-address">{user.ipAddress}</span>
+                <MdDeleteForever
+                  className="user-delete-button"
+                  onClick={() => this.deleteUser(user)}
+                />
+              </div>
+            );
+          })}
+          <AddUserForm />
+        </div>
+      </div>
+    );
+  }
 }
 
 class AddUserForm extends React.Component {
@@ -121,8 +152,8 @@ class AddUserForm extends React.Component {
 
   async handleSubmit(event) {
     if (
-      this.validateIpAddress() != "form-valid" ||
-      this.validateName() != "form-valid"
+      this.validateIpAddress() !== "form-valid" ||
+      this.validateName() !== "form-valid"
     ) {
       window.alert("Please correct inputs and try again");
       return;

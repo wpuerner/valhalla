@@ -65,7 +65,7 @@ export default function startMockServer() {
             },
           ],
         }),
-        { timing: 4000 }
+        { timing: 40 }
       );
 
       this.post("/valhalla/state", (schema, request) => {

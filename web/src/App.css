@@ -63,14 +63,42 @@ body {
 .users {
   border: 2px #ffffff1a solid;
   border-radius: 6px;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  overflow: hidden;
 }
 
 .users-header {
-  margin-bottom: 4px;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.users-header > button {
+  background: unset;
+  border: unset;
+  color: #c6c6c6;
+}
+
+.menu-icon {
+  transition: transform 0.25s;
+}
+
+.menu-icon-open {
+  transform: scaleY(-1);
+}
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+  margin-inline: 8px;
+  max-height: 0px;
+  transition: max-height 0.25s, margin-bottom 0.25s;
+}
+
+.open {
+  max-height: 500px;
+  margin-bottom: 8px;
 }
 
 .user {
@@ -107,7 +135,7 @@ body {
 .add-user-ip-address {
   border-radius: 4px;
   background-color: #ffffff1a;
-  color: white;
+  color: #c6c6c6;
   height: 24px;
 }
 
@@ -143,6 +171,7 @@ body {
   border: 2px #ffffff1a solid;
   border-radius: 6px;
   padding: 8px;
+  margin-top: 8px;
 }
 
 .instance-header {
