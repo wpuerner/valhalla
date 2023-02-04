@@ -43,17 +43,6 @@ function getHttpResponse(message, httpStatus) {
   };
 }
 
-async function getServerData() {
-  const client = new S3Client({ region: "us-east-2" });
-  const response = await client.send(
-    new GetObjectCommand({
-      Bucket: "kestrel-valhalla-resources",
-      Key: "valhalla_data.json",
-    })
-  );
-  return JSON.parse(await response.Body.transformToString());
-}
-
 async function startServer(request) {
   const s3client = new S3Client({ region: "us-east-2" });
   const response = await s3client.send(
