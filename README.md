@@ -17,7 +17,7 @@ To start a stopped server, click the "Start" button next to the server details o
 
 Creating a new server requires SSH access to the instance that it will live on. Contact Will for details on getting instance access.
 
-Once logged into the instance, switch to the valhalla user using `su - valhalla`. Server files reside in the `~/servers/{serverId}` directories. Make a new directory using a unique serverId and install your game server in that directory. [LinuxGSM](https://linuxgsm.com/) should be used as the server manager if your chosen game is available.
+Once logged into the instance, switch to the valhalla user using `su - valhalla`. Server files reside in the `~/servers/{serverId}` directories. Make a new directory using a unique serverId and install your game server in that directory. For existing servers, we use LinuxGSM. Installation of a LinuxGSM server is found here (using Valheim, for example): [LinuxGSM Valheim Server](https://linuxgsm.com/servers/vhserver/).
 
 **Important**  
 When creating a new server, _always_ provide a unique gameworld name in the server configuration. Some server types have hard coded save paths, so world files from different servers might share the same directory. Giving game worlds unique names helps ensure that game worlds aren't accidentally overwritten.
